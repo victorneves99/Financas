@@ -1,7 +1,9 @@
 package com.financas.api.service;
 
+import java.lang.StackWalker.Option;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -53,7 +55,7 @@ public class LancamentoService {
 
   }
 
-  List<Lancamento> buscar(Lancamento lancamento) {
+  public List<Lancamento> buscar(Lancamento lancamento) {
     Example example = Example.of(lancamento,
         ExampleMatcher.matching().withIgnoreCase().withStringMatcher(StringMatcher.CONTAINING));
 
@@ -92,6 +94,11 @@ public class LancamentoService {
       throw new RegraNegocioException("Informe um tipo lançamento.");
     }
 
+  }
+
+  public Optional<Lancamento> obterPorId(Integer id) {
+
+    return lancamentoRepository.findById(id);
   }
 
 }

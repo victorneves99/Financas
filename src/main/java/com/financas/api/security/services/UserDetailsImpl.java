@@ -15,7 +15,7 @@ import com.financas.api.models.User;
 
 public class UserDetailsImpl implements UserDetails, Serializable {
 
-  private Long id;
+  private Integer id;
 
   private String username;
 
@@ -26,7 +26,7 @@ public class UserDetailsImpl implements UserDetails, Serializable {
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(Long id, String username, String email, String password,
+  public UserDetailsImpl(Integer id, String username, String email, String password,
       Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
     this.username = username;
@@ -48,7 +48,7 @@ public class UserDetailsImpl implements UserDetails, Serializable {
         authorities);
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
