@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.financas.api.exceptions.RegraNegocioException;
 import com.financas.api.models.Lancamento;
+import com.financas.api.models.User;
 import com.financas.api.models.enums.StatusLancamento;
+import com.financas.api.models.enums.TipoLancamento;
 import com.financas.api.repository.LancamentoRepository;
 
 import io.jsonwebtoken.lang.Objects;
@@ -26,6 +28,9 @@ public class LancamentoService {
 
   @Autowired
   private LancamentoRepository lancamentoRepository;
+
+  @Autowired
+  private UserService userService;
 
   public Lancamento salvar(Lancamento lancamento) {
     validar(lancamento);
@@ -65,9 +70,13 @@ public class LancamentoService {
 
   }
 
-  public void atualziarStatus(Lancamento lancamento, StatusLancamento status) {
+  public void atualziarStatus(Lancamento lancamento, String status) {
 
-    lancamento.setStatus(status);
+    if (status == null) {
+      throw new RegraNegocioException("Nao foi possivel atualizar  o status do lançamento, envie um status valido.");
+    }
+    StatusLancamento stausString = StatusLancamento.valueOf(status);
+    lancamento.setStatus(stausString);
 
     atualizar(lancamento);
 
@@ -96,9 +105,36 @@ public class LancamentoService {
 
   }
 
-  public Optional<Lancamento> obterPorId(Integer id) {
+  public Lancamento obterPorId(Integer id) {
+    try {
+      Optional<Lancamento> findById = lancamentoRepository.findById(id);
+      if (findById.isPresent()) {
+        return findById.get();
+      }
+    } catch (RegraNegocioException e) {
+      throw new RegraNegocioException("Lancamento não encontrado");
+    }
+    return null;
 
-    return lancamentoRepository.findById(id);
+  }
+
+  public BigDecimal obterSaldoUsuario(Integer id) {
+
+    userService.obterPorId(id);
+
+    BigDecimal receitas = lancamentoRepository.obterSaldo(id, TipoLancamento.RECEITA);
+    BigDecimal despesas = lancamentoRepository.obterSaldo(id, TipoLancamento.DESPESA);
+
+    if (receitas == null) {
+      receitas = BigDecimal.ZERO;
+    }
+
+    if (despesas == null) {
+      despesas = BigDecimal.ZERO;
+    }
+
+    return receitas.subtract(despesas);
+
   }
 
 }

@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.financas.api.dto.AtualizaStatusDto;
 import com.financas.api.dto.LancamentoDto;
 import com.financas.api.exceptions.RegraNegocioException;
 import com.financas.api.mapper.Mapper;
 import com.financas.api.models.Lancamento;
 import com.financas.api.models.User;
+import com.financas.api.models.enums.StatusLancamento;
 import com.financas.api.service.LancamentoService;
 import com.financas.api.service.UserService;
 
@@ -50,23 +52,23 @@ public class LancamentoController {
   public ResponseEntity buscar(@RequestParam(value = "descricao", required = false) String descricao,
       @RequestParam(value = "mes", required = false) Integer mes,
       @RequestParam(value = "ano", required = false) Integer ano, @RequestParam(value = "usuario") Integer idUsuario) {
-
-    Lancamento lancamentoFiltro = new Lancamento();
-    lancamentoFiltro.setDescricao(descricao);
-    lancamentoFiltro.setAno(ano);
-    lancamentoFiltro.setMes(mes);
-
-    User user = userService.obterPorId(idUsuario);
-
-    if (user.equals(Objects.nonNull(user))) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario não  encontrado para o ID informado.");
-    } else {
+    try {
+      User user = userService.obterPorId(idUsuario);
+      Lancamento lancamentoFiltro = new Lancamento();
+      lancamentoFiltro.setDescricao(descricao);
+      lancamentoFiltro.setAno(ano);
+      lancamentoFiltro.setMes(mes);
       lancamentoFiltro.setUsuario(user);
+
+      List<Lancamento> buscarLancamentos = service.buscar(lancamentoFiltro);
+
+      return ResponseEntity.ok(buscarLancamentos);
+    } catch (RegraNegocioException e) {
+
+      return ResponseEntity.badRequest().body(e.getMessage());
+
     }
 
-    List<Lancamento> buscarLancamentos = service.buscar(lancamentoFiltro);
-
-    return ResponseEntity.ok(buscarLancamentos);
   }
 
   @PostMapping()
@@ -87,28 +89,41 @@ public class LancamentoController {
   @PutMapping("/{id}")
   public ResponseEntity atualizar(@RequestBody LancamentoDto dto, @PathVariable("id") Integer id) {
 
-    return service.obterPorId(id).map(entity -> {
-      try {
-        Lancamento model = mapper.toModel(dto);
-        model.setId(entity.getId());
-        service.atualizar(model);
-        return ResponseEntity.status(HttpStatus.OK).body(model);
-      } catch (RegraNegocioException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-      }
-
-    }).orElseGet(() -> new ResponseEntity("Lançamento não encontrado na base de dados", HttpStatus.BAD_REQUEST));
+    try {
+      Lancamento model = service.obterPorId(id);
+      Lancamento lancamento = mapper.toModel(dto);
+      model.setId(lancamento.getId());
+      service.atualizar(model);
+      return ResponseEntity.status(HttpStatus.OK).body(model);
+    } catch (RegraNegocioException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity deletar(@PathVariable("id") Integer id) {
 
-    return service.obterPorId(id).map(entidade -> {
-      service.deletar(entidade);
-      return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }).orElseGet(() -> new ResponseEntity("Lançamento não encontrado na base de dados", HttpStatus.BAD_REQUEST));
+    try {
+      Lancamento obterPorId = service.obterPorId(id);
+      service.deletar(obterPorId);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch (RegraNegocioException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+  }
+
+  @PutMapping("{id}/atualizar-status")
+  public ResponseEntity atualizarStatus(@RequestBody AtualizaStatusDto dto, @PathVariable("id") Integer id) {
+
+    try {
+      Lancamento lancamento = service.obterPorId(id);
+      service.atualziarStatus(lancamento, dto.getStatus());
+      return ResponseEntity.status(HttpStatus.OK).body(lancamento);
+    } catch (RegraNegocioException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
 
   }
 
