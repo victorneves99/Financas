@@ -2,6 +2,8 @@ package com.financas.api.models;
 
 import javax.persistence.*;
 
+import com.financas.api.models.enums.ERole;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

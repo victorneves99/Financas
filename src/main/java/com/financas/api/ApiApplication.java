@@ -5,8 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.financas.api.models.ERole;
 import com.financas.api.models.Role;
+import com.financas.api.models.enums.ERole;
 import com.financas.api.repository.RoleRepository;
 
 import io.jsonwebtoken.lang.Arrays;

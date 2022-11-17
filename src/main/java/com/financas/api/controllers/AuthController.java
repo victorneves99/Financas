@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.financas.api.models.ERole;
 import com.financas.api.models.Role;
 import com.financas.api.models.User;
+import com.financas.api.models.enums.ERole;
 import com.financas.api.payload.request.LoginRequest;
 import com.financas.api.payload.request.SingupRequest;
 import com.financas.api.payload.response.JwtResponse;
