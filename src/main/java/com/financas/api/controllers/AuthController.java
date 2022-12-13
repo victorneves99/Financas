@@ -15,12 +15,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.financas.api.exceptions.RegraNegocioException;
 import com.financas.api.models.Role;
 import com.financas.api.models.User;
 import com.financas.api.models.enums.ERole;
@@ -63,9 +65,9 @@ public class AuthController {
       JwtResponse autenticado = authService.autenticar(loginRequest);
 
       return ResponseEntity.status(HttpStatus.OK).body(autenticado);
-    } catch (Exception e) {
+    } catch (RegraNegocioException e) {
 
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
 
   }
@@ -76,7 +78,7 @@ public class AuthController {
     try {
       MessageResponse criarUsuario = authService.criarUsuario(signUpRequest);
       return ResponseEntity.status(HttpStatus.CREATED).body(criarUsuario);
-    } catch (RuntimeException e) {
+    } catch (RegraNegocioException e) {
 
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }

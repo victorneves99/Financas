@@ -1,5 +1,6 @@
 package com.financas.api;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,9 +14,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.financas.api.models.Lancamento;
 import com.financas.api.models.Role;
 import com.financas.api.models.User;
 import com.financas.api.models.enums.ERole;
+import com.financas.api.models.enums.StatusLancamento;
+import com.financas.api.models.enums.TipoLancamento;
+import com.financas.api.repository.LancamentoRepository;
 import com.financas.api.repository.RoleRepository;
 import com.financas.api.repository.UserRepository;
 
@@ -32,6 +37,7 @@ public class ApiApplication implements CommandLineRunner {
 	PasswordEncoder encoder;
 
 	@Autowired
+	LancamentoRepository lancamentoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
@@ -55,6 +61,11 @@ public class ApiApplication implements CommandLineRunner {
 		User user1 = new User("victor", "victor@gmail.com", encoder.encode("123456"), setRole);
 
 		userRepository.save(user1);
+
+		Lancamento lancamento = new Lancamento(01, 2022, "teste", user1, BigDecimal.valueOf(200), TipoLancamento.DESPESA,
+				StatusLancamento.PENDENTE);
+
+		lancamentoRepository.save(lancamento);
 
 	}
 

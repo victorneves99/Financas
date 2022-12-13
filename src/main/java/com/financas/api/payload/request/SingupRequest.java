@@ -8,19 +8,18 @@ import javax.validation.constraints.Size;
 
 public class SingupRequest {
 
-  @NotBlank
-  @Size(min = 3, max = 20)
+  @NotBlank(message = "{username.not.blank}")
+  @Size(min = 3, max = 20, message = "Username deve conter entre 3 a 20 caracter")
   private String username;
 
-  @NotBlank
-  @Size(max = 50)
-  @Email
+  @NotBlank(message = "{email.not.blank}")
+  @Email(message = "{email.not.valid}")
   private String email;
 
   private Set<String> role;
 
-  @NotBlank
-  @Size(min = 6, max = 40)
+  @NotBlank(message = "{password.not.blank}")
+  @Size(min = 6, max = 40, message = "Senha deve conter min 6 max 40")
   private String password;
 
   public String getUsername() {

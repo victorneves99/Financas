@@ -73,11 +73,11 @@ public class AuthService {
   public MessageResponse criarUsuario(SingupRequest singupRequest) {
 
     if (userRepository.existsByUsername(singupRequest.getUsername())) {
-      return new MessageResponse("Username ja existe");
+      throw new RegraNegocioException("Username ja existe");
     }
 
     if (userRepository.existsByEmail(singupRequest.getEmail())) {
-      return new MessageResponse("Email ja esta em uso!");
+      throw new RegraNegocioException("Email ja esta em uso!");
     }
 
     // Create new user's account
