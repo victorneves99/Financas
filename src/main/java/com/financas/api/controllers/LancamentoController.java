@@ -30,7 +30,7 @@ import com.financas.api.models.enums.StatusLancamento;
 import com.financas.api.service.LancamentoService;
 import com.financas.api.service.UserService;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/lancamentos")
 public class LancamentoController {
