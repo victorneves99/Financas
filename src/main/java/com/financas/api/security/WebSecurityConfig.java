@@ -74,7 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .anyRequest().authenticated();
     http.headers().frameOptions().sameOrigin().disable();
     http.formLogin().permitAll();
-    http.cors(Customizer.withDefaults());
 
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
   }
@@ -84,14 +83,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("https://financas.up.railway.app"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
+  // @Bean
+  // CorsConfigurationSource corsConfigurationSource() {
+  // CorsConfiguration configuration = new CorsConfiguration();
+  // configuration.setAllowedOrigins(Arrays.asList("https://financas.up.railway.app"));
+  // configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE",
+  // "PUT"));
+  // UrlBasedCorsConfigurationSource source = new
+  // UrlBasedCorsConfigurationSource();
+  // source.registerCorsConfiguration("/**", configuration);
+  // return source;
+  // }
 
 }
