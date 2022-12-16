@@ -36,7 +36,7 @@ import com.financas.api.security.jwt.JwtUtils;
 import com.financas.api.security.services.UserDetailsImpl;
 import com.financas.api.service.AuthService;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

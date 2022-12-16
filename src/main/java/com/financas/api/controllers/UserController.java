@@ -16,7 +16,7 @@ import com.financas.api.models.User;
 import com.financas.api.service.LancamentoService;
 import com.financas.api.service.UserService;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/usuarios")
 public class UserController {
