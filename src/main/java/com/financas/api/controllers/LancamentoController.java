@@ -75,7 +75,7 @@ public class LancamentoController {
   }
 
   @PostMapping()
-  @PreAuthorize("hasRole('ADMIN')")
+  // @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity salvar(@RequestBody LancamentoDto dto) {
 
     try {
