@@ -106,7 +106,6 @@ public class LancamentoController {
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity deletar(@PathVariable("id") Integer id) {
 
     try {
